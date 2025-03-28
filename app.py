@@ -5,12 +5,12 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Add this near the top of your file, after imports
-if not os.getenv("OPENAI_API_KEY"):
-    st.error("OpenAI API key not found. Please add it to your .env file.")
+if not os.getenv("GROK_API_KEY"):
+    st.error("Grok API key not found. Please add it to your .env file.")
     st.stop()
 
-# Make sure OPENAI_API_KEY is set for the application
-os.environ["OPENAI_API_KEY"] = os.getenv("OPENAI_API_KEY")
+# Make sure GROK_API_KEY is set for the application
+os.environ["GROK_API_KEY"] = os.getenv("GROK_API_KEY")
 
 import gc
 import tempfile
@@ -18,9 +18,9 @@ import uuid
 import fitz  # PyMuPDF for PDF handling
 
 from llama_index.core import Settings
-from llama_index.llms.openai import OpenAI
+from llama_index.llms.huggingface_api import HuggingFaceInferenceAPI
 from llama_index.core import PromptTemplate
-from llama_index.embeddings.openai import OpenAIEmbedding
+from llama_index.embeddings.huggingface import HuggingFaceEmbedding
 from llama_index.core import VectorStoreIndex, SimpleDirectoryReader
 from llama_index.readers.docling import DoclingReader
 from llama_index.core.node_parser import MarkdownNodeParser
@@ -38,7 +38,7 @@ client = None
 
 @st.cache_resource
 def load_llm():
-    llm = OpenAI(model="gpt-4", temperature=0)
+    llm = HuggingFaceInferenceAPI(model_name="Grok-1/LAMA-3.1", api_key=os.getenv("GROK_API_KEY"), temperature=0)
     return llm
 
 def reset_chat():
@@ -92,7 +92,7 @@ with st.sidebar:
 
                     # setup llm & embedding model
                     llm = load_llm()
-                    embed_model = OpenAIEmbedding(model="text-embedding-3-small")
+                    embed_model = HuggingFaceEmbedding(model_name="Grok-1/LAMA-3.1-embedding")
                     # Creating an index over loaded data
                     Settings.embed_model = embed_model
                     # Modify the node parser configuration based on official MarkdownNodeParser implementation
@@ -161,7 +161,7 @@ with st.sidebar:
 col1, col2 = st.columns([6, 1])
 
 with col1:
-    st.header(f"RAG over Excel using Dockling 🐥 &  OpenAI 🤖")
+    st.header(f"RAG over Excel using Dockling 🐥 & Grok LAMA 3.1 🤖")
 
 with col2:
     st.button("Clear ↺", on_click=reset_chat)
