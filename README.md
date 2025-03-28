@@ -2,8 +2,6 @@
 
 A Streamlit-based Retrieval-Augmented Generation (RAG) application that allows you to upload PDF documents and chat with them using Grok's LAMA 3.1 model and Dockling for enhanced document parsing.
 
-![PDF RAG Application Screenshot](https://placeholder-for-screenshot.png)
-
 ## Features
 
 - **Upload and Process PDF Documents**: Seamlessly upload PDF files and have them indexed for intelligent querying
